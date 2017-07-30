@@ -34,8 +34,9 @@ def custom_score(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    # TODO: finish this function!
-    raise NotImplementedError
+    player_moves = len(game.get_legal_moves(player))
+    opponent_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    return float(player_moves - opponent_moves)
 
 
 def custom_score_2(game, player):
@@ -170,6 +171,32 @@ class MinimaxPlayer(IsolationPlayer):
         # Return the best move from the last completed search iteration
         return best_move
 
+    def min_value(self, game, depth):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+
+        if depth == 1:
+            return self.score(game, self)
+        else:
+            v = float("inf")
+            moves = game.get_legal_moves()
+            for m in moves:
+                v = min(v, self.max_value(game.forecast_move(m), depth-1))
+        return v
+
+    def max_value(self, game, depth):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+
+        if depth == 1:
+            return self.score(game, self)
+        else:
+            v = float("-inf")
+            moves = game.get_legal_moves()
+            for m in moves:
+                v = max(v, self.min_value(game.forecast_move(m), depth-1))
+        return v
+
     def minimax(self, game, depth):
         """Implement depth-limited minimax search algorithm as described in
         the lectures.
@@ -212,8 +239,15 @@ class MinimaxPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        moves = game.get_legal_moves()
+        v = float("-inf")
+        best_move = (-1, -1)
+        for m in moves:
+            move_v = self.min_value(game.forecast_move(m), depth)
+            if move_v > v:
+                best_move = m
+                v = move_v
+        return best_move
 
 
 class AlphaBetaPlayer(IsolationPlayer):
