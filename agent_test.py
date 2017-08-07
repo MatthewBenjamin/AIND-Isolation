@@ -25,10 +25,10 @@ if __name__ == '__main__':
     #unittest.main()
     from isolation import Board
     from sample_players import RandomPlayer
-    from game_agent import MinimaxPlayer
+    from game_agent import AlphaBetaPlayer
 
     # create an isolation board (by default 7x7)
-    player1 = MinimaxPlayer()
+    player1 = AlphaBetaPlayer()
     player2 = RandomPlayer()
     game = Board(player1, player2)
 
