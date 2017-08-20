@@ -1,7 +1,3 @@
-"""Finish all TODO items in this file to complete the isolation project, then
-test your agent's strength against a set of known agents using tournament.py
-and include the results in your report.
-"""
 import random
 
 
@@ -32,7 +28,8 @@ def custom_score(game, player):
     Returns
     -------
     float
-        The heuristic value of the current game state to the specified player.
+        A ratio of the number of the current player's moves compared with the total
+        number of moves on the board.
     """
     player_moves = len(game.get_legal_moves(player))
     total_moves = len(game.get_blank_spaces())
@@ -59,7 +56,8 @@ def custom_score_2(game, player):
     Returns
     -------
     float
-        The heuristic value of the current game state to the specified player.
+        The negative ratio of the number of opponent's moves compared with the
+        total number of moves on the board.
     """
     neg_opponent_moves = -len(game.get_legal_moves(game.get_opponent(player)))
     total_moves = len(game.get_blank_spaces())
@@ -86,7 +84,7 @@ def custom_score_3(game, player):
     Returns
     -------
     float
-        The heuristic value of the current game state to the specified player.
+        The negative value of the opponent's number of moves.
     """
     neg_opponent_moves = -len(game.get_legal_moves(game.get_opponent(player)))
     return float(neg_opponent_moves)
@@ -173,6 +171,9 @@ class MinimaxPlayer(IsolationPlayer):
         return best_move
 
     def min_value(self, game, depth):
+        """
+            Returns the value for a min node of a game tree.
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -186,6 +187,9 @@ class MinimaxPlayer(IsolationPlayer):
         return v
 
     def max_value(self, game, depth):
+        """
+            Returns the value for a max node of a game tree.
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -310,6 +314,9 @@ class AlphaBetaPlayer(IsolationPlayer):
         return best_move
 
     def min_value(self, game, depth, alpha, beta):
+        """
+            Returns the value for a min node of a game tree with alpha-beta pruning.
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -327,13 +334,16 @@ class AlphaBetaPlayer(IsolationPlayer):
         return v 
 
     def max_value(self, game, depth, alpha, beta):
+        """
+            Returns the value for a max node of a game tree with alpha-beta pruning.
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
         moves = game.get_legal_moves()
 
         if not moves or depth == 0:
-            return self.score(game, self) 
+            return self.score(game, self)
 
         v = float("-inf")
         for m in moves:
@@ -342,7 +352,7 @@ class AlphaBetaPlayer(IsolationPlayer):
             if v >= beta:
                 return v
             alpha = max(alpha, v)
-        return v 
+        return v
 
     def alphabeta(self, game, depth, alpha=float("-inf"), beta=float("inf")):
         """Implement depth-limited minimax search with alpha-beta pruning as
