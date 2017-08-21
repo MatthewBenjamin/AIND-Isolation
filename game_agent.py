@@ -31,6 +31,12 @@ def custom_score(game, player):
         A ratio of the number of the current player's moves compared with the total
         number of moves on the board.
     """
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+
     player_moves = len(game.get_legal_moves(player))
     total_moves = len(game.get_blank_spaces())
     return player_moves / total_moves
@@ -59,6 +65,12 @@ def custom_score_2(game, player):
         The negative ratio of the number of opponent's moves compared with the
         total number of moves on the board.
     """
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+
     neg_opponent_moves = -len(game.get_legal_moves(game.get_opponent(player)))
     total_moves = len(game.get_blank_spaces())
     return neg_opponent_moves / total_moves
@@ -86,6 +98,12 @@ def custom_score_3(game, player):
     float
         The negative value of the opponent's number of moves.
     """
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+
     neg_opponent_moves = -len(game.get_legal_moves(game.get_opponent(player)))
     return float(neg_opponent_moves)
 
